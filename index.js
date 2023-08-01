@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 async function promptUserInput() {
-  const inquirer = (await import('inquirer')).default; // Use dynamic import
+  const inquirer = (await import('inquirer')).default; // dynamic import
 
   const userInput = await inquirer.prompt([
     {
@@ -62,7 +62,7 @@ async function generateLogo() {
   const userInput = await promptUserInput();
   const { logoText, textColor, shapeType, shapeColor } = userInput;
 
-  // Static imports for the shapes
+  // imports for the shapes
   const { Triangle, Circle, Square } = require('./lib/shapes');
 
   let shape;
@@ -81,13 +81,13 @@ async function generateLogo() {
       process.exit(1);
   }
 
-  shape.setLogoText(logoText); // Set the logo text for the shape
-  shape.setColor(textColor); // Set the text color for the shape, if provided
-  shape.setColor(shapeColor);
+  shape.setLogoText(logoText); // set logo text for the shape if provided
+  shape.setTextColor(textColor); // set text color for the shape if provided
+  shape.setShapeColor(shapeColor); //set shape color if provided
 
-  const svgLogo = shape.render(); // Save the generated SVG to the svgLogo variable
+  const svgLogo = shape.render(); // save the generated SVG to the svgLogo variable
 
-  // Save the SVG logo to logo.svg in the examples folder
+  // save to logo.svg in the examples folder
   fs.writeFile('./examples/logo.svg', svgLogo, (err) => {
     if (err) {
       console.error('Error saving SVG logo:', err);
@@ -95,7 +95,7 @@ async function generateLogo() {
       console.log('Generated logo.svg');
     }
   });
-  console.log(svgLogo); // Output the SVG logo to the console for testing purposes
+  console.log(svgLogo); // send to console for testing
 }
 
 generateLogo().catch((error) => console.error(error));
