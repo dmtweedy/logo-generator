@@ -1,6 +1,6 @@
 
     <svg width="300" height="200" xmlns="http://www.w3.org/2000/svg">
-      <rect x="100" y="50" width="150" height="150" fill="red" />
+      <polygon points="112.5, 93.75 187.5, 93.75 150, 56.25" fill="green" />
       <text x="150" y="125" font-size="60" text-anchor="middle" fill="white">DMT</text>
     </svg>
   
