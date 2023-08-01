@@ -1,4 +1,3 @@
-const { Triangle, Circle, Square } = require('./lib/shapes');
 const fs = require('fs');
 
 async function promptUserInput() {
@@ -31,50 +30,74 @@ async function promptUserInput() {
     {
       type: 'input',
       name: 'shapeColor',
-      message: 'Enter the shape color (color keyword or hexadecimal number):',
-      default: 'green',
+      message: (answers) => {
+        switch (answers.shapeType) {
+          case 'triangle':
+            return 'Enter the shape color (color keyword or hexadecimal number) Default:';
+          case 'circle':
+            return 'Enter the shape color (color keyword or hexadecimal number) Default:';
+          case 'square':
+            return 'Enter the shape color (color keyword or hexadecimal number) Default:';
+        }
+      },
+      default: (answers) => {
+        switch (answers.shapeType) {
+          case 'triangle':
+            return 'blue';
+          case 'circle':
+            return 'green';
+          case 'square':
+            return 'red';
+          default:
+            return 'white';
+        }
+      },
     },
   ]);
 
   return userInput;
 }
 
-function generateLogo(userInput) {
+async function generateLogo() {
+  const userInput = await promptUserInput();
   const { logoText, textColor, shapeType, shapeColor } = userInput;
+
+  // Static imports for the shapes
+  const { Triangle, Circle, Square } = require('./lib/shapes');
 
   let shape;
   switch (shapeType) {
-    case 'circle':
-      shape = new Circle();
-      break;
     case 'triangle':
       shape = new Triangle();
+      break;
+    case 'circle':
+      shape = new Circle();
       break;
     case 'square':
       shape = new Square();
       break;
     default:
-      console.error('Invalid shape type');
-      return;
+      console.error('Invalid shape type.');
+      process.exit(1);
   }
 
+  shape.setLogoText(logoText); // Set the logo text for the shape
+  shape.setColor(textColor); // Set the text color for the shape, if provided
   shape.setColor(shapeColor);
 
-  const svgLogo = `
-    <svg width="300" height="200" xmlns="http://www.w3.org/2000/svg">
-      ${shape.render()}
-      <text x="150" y="125" font-size="40" text-anchor="middle" fill="${textColor}">${logoText}</text>
-    </svg>
-  `;
+  const svgLogo = shape.render(); // Save the generated SVG to the svgLogo variable
 
-  // write the SVG logo to the file inside the examples folder
-  fs.writeFileSync('./examples/logo.svg', svgLogo);
+  // Save the SVG logo to logo.svg in the examples folder
+  fs.writeFile('./examples/logo.svg', svgLogo, (err) => {
+    if (err) {
+      console.error('Error saving SVG logo:', err);
+    } else {
+      console.log('Generated logo.svg');
+    }
+  });
+  console.log(svgLogo); // Output the SVG logo to the console for testing purposes
 }
 
+generateLogo().catch((error) => console.error(error));
+
 module.exports = { generateLogo };
-
-
-promptUserInput()
-  .then(generateLogo)
-  .then(() => console.log('Generated logo.svg'))
-  .catch((error) => console.error(error));
