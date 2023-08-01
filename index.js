@@ -42,11 +42,36 @@ async function promptUserInput() {
 function generateLogo(userInput) {
   const { logoText, textColor, shapeType, shapeColor } = userInput;
 
+  let shape;
+  switch (shapeType) {
+    case 'circle':
+      shape = new Circle();
+      break;
+    case 'triangle':
+      shape = new Triangle();
+      break;
+    case 'square':
+      shape = new Square();
+      break;
+    default:
+      console.error('Invalid shape type');
+      return;
   }
 
   shape.setColor(shapeColor);
 
-  fs.writeFileSync('logo.svg', svgLogo);
+  const svgLogo = `
+    <svg width="300" height="200" xmlns="http://www.w3.org/2000/svg">
+      ${shape.render()}
+      <text x="150" y="125" font-size="60" text-anchor="middle" fill="${textColor}">${logoText}</text>
+    </svg>
+  `;
+
+  // write the SVG logo to the file inside the examples folder
+  fs.writeFileSync('./examples/logo.svg', svgLogo);
+}
+
+module.exports = { generateLogo };
 
 
 promptUserInput()
